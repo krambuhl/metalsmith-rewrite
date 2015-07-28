@@ -1,0 +1,19 @@
+{
+  "name": "metalsmith-ignore",
+  "description": "A Metalsmith plugin to ignore files that match a pattern.",
+  "repository": "git://github.com/segmentio/metalsmith-ignore.git",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Evan Krambuhl <thekrambuhl@gmail.com> (http://stumptownbear.com)",
+  "main": "index.js",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "multimatch": "^2.0.0",
+    "object-path-get": "0.0.2",
+    "interpolate": "^0.1.0",
+    "lodash": "^3.10.0"
+  },
+  "devDependencies": {
+    "tape": "^3.0.3"
+  }
+}
