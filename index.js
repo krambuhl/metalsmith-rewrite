@@ -3,6 +3,7 @@ var path = require('path');
 var multi = require('multimatch');
 var getPath = require('object-path-get');
 var interpolate = require('interpolate');
+var moment = require('moment');
 var _ = require('lodash');
 
 
@@ -37,8 +38,10 @@ function plugin(options) {
         debug('checking file: ' + file);
 
         if (multi(file, pattern.pattern) && rw) {
-          var paths = path.parse(file);
-          var meta = extend({}, files[file], metalsmith.metadata(), { path: extend(paths, { }) });
+          var paths = parsePath(file);
+          var meta = _.extend({}, files[file], metalsmith.metadata(), { path: paths });
+          if (files[file].date) _.extend(meta, { date: pattern.date(files[file].date) });
+
           var name = pattern.filename(meta, file, pattern);
           
           if (file !== name) {
@@ -59,6 +62,25 @@ function plugin(options) {
     done();
   };
 }
+
+
+/**
+ * Verify that expected keys are found in data 
+ *
+ * @param {String} string
+ * @param {Object} data
+ * @return {Boolean}
+ */
+
+function parsePath(filename) {
+  var parts = {};
+  parts.dir = path.dirname(filename);
+  parts.ext = path.extname(filename);
+  parts.name = path.basename(filename, parts.ext);
+  parts.base = parts.name + parts.ext;
+  return parts;
+}
+
 
 
 /**
@@ -83,8 +105,9 @@ function normalize(patterns) {
     var ext;
     var type = typeof data;
     var def = {
-      date: format('YYYY/MM'),
       pattern: ['**'],
+      filename: transformString('./{path.dir}/{path.base}'),
+      date: format('YYYY/MM'),
       copy: false 
     };
 
@@ -92,14 +115,15 @@ function normalize(patterns) {
       ext = { filename: transformString(data) };
     else if (type === 'function') 
       ext = { filename: data };
-    else 
-      ext = extend({}, data, { 
-        date: format(data.date), 
-        filename: transformString(data.filename),
-        pattern: Array.isArray(data.pattern) ? data.pattern : [data.pattern]
-      });
+    else {
+      if (data.pattern) data.pattern = Array.isArray(data.pattern) ? data.pattern : [data.pattern];
+      if (data.date) data.date = format(data.date);
+      if (data.filename) data.filename = transformString(data.filename);
 
-    return extend({}, def, ext);
+      ext = _.extend({}, data);
+    }
+
+    return _.extend({}, def, ext);
   }
 }
 
@@ -113,10 +137,14 @@ function normalize(patterns) {
  */
 
 function dataExists(str, data) {
-  return str.match(/{[\w\.]+}/g).filter(function(e) {
+  var st = str.match(/{[\w\.]+}/g)
+  var ls = st.filter(function(e) {
     var pth = e.substr(1).substr(0, e.length - 2);
-    return getPath(data, pth);
-  }).length > 0;
+    var p = getPath(data, pth);
+    return p !== undefined && p.length > 0 && p !== '';
+  });
+
+  return ls.length === st.length;
 }
 
 
@@ -146,8 +174,8 @@ function transformString(str) {
  * @return {Function}
  */
 
-function format(string) {
-  return string !== undefined ? function(date) {
-    return moment(date).utc().format(string);
-  } : undefined;
+function format(format) {
+  return function(date) {
+    return moment(date).utc().format(format);
+  }
 }

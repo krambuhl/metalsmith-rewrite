@@ -2,7 +2,7 @@
 
 Metalsmith plugin that renames a glob of files using string interpolation patterns with file metadata or function.
 
-Metalsmith-rewrite can take the place of move, copy, rename, and permalinks.
+Metalsmith-rewrite can take the place of move, copy, rename, and permalink plugins.
 
 ## Installation
 
@@ -40,16 +40,30 @@ metalsmith.use(rewrite([{
 }, {
   // permalinks page.html => page/index.html
   pattern: ['**', '!**/index.html'],
-  filename: '{path.dir}/{path.name}/index.html',
-
+  filename: '{path.dir}/{path.name}/index.html'
 }]));
 
 ```
 
 ## Options
 
-There are a couple options available to make rewrite more us
+There are a couple options available to make rewrite more useful.
 
+#### pattern
+
+Glob pattern used in multimatch, only rewrites files matching pattern.  Can be array or string.
+
+#### filename
+
+Rename function or string.  Strings are transformed into functions using iterpolation from file metadata. File `path` and `date` data points are available in filename string along with filemeta.
+
+#### date
+
+Moment.js date format string used when `{date}` is used in filename string.
+
+#### copy
+
+When set to true, original files are left untouched and matching files are copied.
 
 ## License
 
