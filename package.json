@@ -2,7 +2,7 @@
   "name": "metalsmith-rewrite",
   "description": "Renames a glob of files using string patterns and file metadata.",
   "repository": "git://github.com/krambuhl/metalsmith-rewrite.git",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "author": "Evan Krambuhl <thekrambuhl@gmail.com> (http://stumptownbear.com)",
   "main": "index.js",
@@ -20,5 +20,15 @@
   "devDependencies": {
     "metalsmith": "^2.0.1",
     "tape": "^4.0.1"
-  }
+  },
+  "keywords": [
+    "metalsmith",
+    "metalsmith-plugin",
+    "rewrite",
+    "filepath",
+    "path",
+    "copy",
+    "rename",
+    "move"
+  ]
 }
