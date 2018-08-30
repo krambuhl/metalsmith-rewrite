@@ -102,8 +102,7 @@ function normalize(patterns) {
   }
 
   function _normalize(data) {
-    var ext;
-    var type = typeof data;
+    var ext = {};
     var def = {
       pattern: ['**'],
       filename: transformString('./{path.dir}/{path.base}'),
@@ -111,19 +110,13 @@ function normalize(patterns) {
       copy: false 
     };
 
-    if (type === 'string') 
-      ext = { filename: transformString(data) };
-    else if (type === 'function') 
-      ext = { filename: data };
-    else {
-      if (data.pattern) data.pattern = Array.isArray(data.pattern) ? data.pattern : [data.pattern];
-      if (data.date) data.date = format(data.date);
-      if (data.filename) data.filename = transformString(data.filename);
-
-      ext = _.extend({}, data);
+    if (data.pattern) ext.pattern = Array.isArray(data.pattern) ? data.pattern : [data.pattern];
+    if (data.date) ext.date = format(data.date);
+    if (typeof data.filename === 'string') {
+      ext.filename = transformString(data.filename);
     }
 
-    return _.extend({}, def, ext);
+    return _.extend({}, def, data, ext);
   }
 }
 

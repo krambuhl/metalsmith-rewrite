@@ -20,6 +20,17 @@ test('should pass through strings by defaults', function(t) {
   });
 })
 
+test('should accept filename as function', function(t) {
+  t.plan(1);
+  plugtest({
+    filename: function(meta, filename, opts) {
+      return filename.replace(/p\//, '');
+    }
+  }, function(err, files) {
+    t.equal(files['b.js'].slug, 'test-b');
+  });
+})
+
 test('accept an array of options', function(t) {
   t.plan(1);
   plugtest([{ // flattern
