@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "debug": "^2.2.0",
-    "multimatch": "^2.0.0",
-    "object-path-get": "0.0.2",
     "interpolate": "^0.1.0",
+    "lodash": "^4.17.10",
     "moment": "^2.10.6",
-    "lodash": "^3.10.0"
+    "multimatch": "^2.0.0",
+    "object-path-get": "0.0.2"
   },
   "devDependencies": {
     "metalsmith": "^2.0.1",
